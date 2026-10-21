@@ -30,8 +30,8 @@ internal sealed class SoundService : IDisposable
 
     private void TryInitialize()
     {
-        string path = Path.Combine(AppContext.BaseDirectory, "Assets", "click.mp3");
-        if (!File.Exists(path))
+        string? path = ResolveSoundFile();
+        if (path is null)
         {
             Log.Warn("Click sound asset not found; button sounds are disabled.");
             return;
@@ -54,6 +54,38 @@ internal sealed class SoundService : IDisposable
             Log.Warn("Button click sound could not be initialised", ex);
             _available = false;
         }
+    }
+
+    /// <summary>
+    /// Returns a playable file path for the click sound. Prefers the embedded copy (extracted once to a stable temp
+    /// file so a single-file published .exe still has sound), and falls back to a loose Assets\click.mp3 if present.
+    /// </summary>
+    private static string? ResolveSoundFile()
+    {
+        try
+        {
+            using Stream? stream = typeof(SoundService).Assembly.GetManifestResourceStream("click.mp3");
+            if (stream is not null)
+            {
+                string dir = Path.Combine(Path.GetTempPath(), "PasswordHelper");
+                Directory.CreateDirectory(dir);
+                string file = Path.Combine(dir, "click.mp3");
+                if (!File.Exists(file) || new FileInfo(file).Length != stream.Length)
+                {
+                    using FileStream fs = File.Create(file);
+                    stream.CopyTo(fs);
+                }
+
+                return file;
+            }
+        }
+        catch (Exception ex)
+        {
+            Log.Warn("Could not extract the embedded click sound", ex);
+        }
+
+        string onDisk = Path.Combine(AppContext.BaseDirectory, "Assets", "click.mp3");
+        return File.Exists(onDisk) ? onDisk : null;
     }
 
     /// <summary>Registers a class handler so every button Click in the app plays the sound (except RepeatButtons).</summary>
