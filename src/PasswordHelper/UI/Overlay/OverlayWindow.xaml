@@ -1,0 +1,15 @@
+<Window x:Class="PasswordHelper.UI.Overlay.OverlayWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Password helper"
+        WindowStyle="None" AllowsTransparency="True" Background="Transparent"
+        ShowInTaskbar="False" Topmost="True" ResizeMode="NoResize"
+        WindowStartupLocation="Manual" SnapsToDevicePixels="True" UseLayoutRounding="True"
+        TextOptions.TextFormattingMode="Ideal" FontFamily="{StaticResource AppFontFamily}">
+    <Grid x:Name="Root" ClipToBounds="True">
+        <Image x:Name="BackdropImage" Stretch="Fill" />
+        <Rectangle x:Name="Scrim" Fill="#000000" Opacity="0" />
+        <Canvas x:Name="RadialCanvas" />
+        <Grid x:Name="PanelHost" Visibility="Collapsed" />
+    </Grid>
+</Window>

@@ -1,0 +1,19 @@
+# Build output
+bin/
+obj/
+dist/
+*.user
+
+# Published / local app data (never commit vaults, settings or logs)
+*.dat
+*.dat.bak
+*.log
+
+# Visual Studio / Rider
+.vs/
+.idea/
+*.suo
+
+# OS
+Thumbs.db
+desktop.ini
